@@ -26,6 +26,7 @@ class _HomeState extends State<Home> {
     return parsed.map<Post>((json) => Post.fromJson(json)).toList();
   }
 
+  // Metodo da API utilizado para mostrar um recurso
   _post() async {
     var corpo = json.encode({
       'userId': 120,
@@ -42,11 +43,45 @@ class _HomeState extends State<Home> {
     print('resposta: ${response.body}');
   }
 
-/*
-  _put() {}
-  _patch() {}
-  _delete() {}
-*/
+  // Metodo da API utilizado para atualizar um recurso
+  _put() async {
+    var corpo = json.encode({
+      'userId': 120,
+      'id': null,
+      'title': 'Título alterado',
+      'body': 'Corpo da postagem alterada'
+    });
+
+    http.Response response = await http.put(Uri.parse('$_urlBase/posts/2'),
+        headers: {'Content-type': 'application/json; charset=UTF-8'},
+        body: corpo);
+
+    print('resposta: ${response.statusCode}');
+    print('resposta: ${response.body}');
+  }
+
+  // Metodo da API utilizado para atualizar um recurso
+  // funciona como o PUT, com a diferença que pode ser enviado somente o que vai ser alterado e não tudo.
+  _patch() async {
+    var corpo =
+        json.encode({'userId': 120, 'body': 'Corpo da postagem alterada'});
+
+    http.Response response = await http.patch(Uri.parse('$_urlBase/posts/2'),
+        headers: {'Content-type': 'application/json; charset=UTF-8'},
+        body: corpo);
+
+    print('resposta: ${response.statusCode}');
+    print('resposta: ${response.body}');
+  }
+
+  // Metodo da API utilizado para deletar um recurso
+  _delete() async {
+    http.Response response = await http.delete(Uri.parse('$_urlBase/posts/2'));
+
+    print('resposta: ${response.statusCode}');
+    print('resposta: ${response.body}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,11 +100,11 @@ class _HomeState extends State<Home> {
                 ),
                 ElevatedButton(
                   child: Text('Atualizar'),
-                  onPressed: _post,
+                  onPressed: _patch,
                 ),
                 ElevatedButton(
                   child: Text('Remover'),
-                  onPressed: _post,
+                  onPressed: _delete,
                 ),
               ],
             ),
